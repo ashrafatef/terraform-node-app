@@ -1,6 +1,6 @@
 provider "google" {
-  project = var.project_id
-  region  =  var.region
+  project     = var.project_id
+  region      = var.region
   credentials = file("./cred-key.json")
 }
 
@@ -10,7 +10,19 @@ provider "google" {
 # }
 
 resource "google_container_cluster" "primary" {
-  name               = "ashraf-cluster"
+  name               = "terraform-node-cluster"
   location           = var.region
   initial_node_count = var.node_count
+}
+
+## Container Registery 
+resource "google_container_registry" "registry" {
+  project  = var.project_id
+  location = "EU"
+}
+
+resource "google_storage_bucket_iam_member" "owner" {
+  bucket = google_container_registry.registry.id
+  role   = "roles/storage.admin"
+  member = "user:ashrafatef.de@gmail.com"
 }
