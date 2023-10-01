@@ -5,10 +5,10 @@ FROM node:18.16.0-slim
 WORKDIR /usr/src/app
 
 # Copy package.json and yarn.lock.json to the working directory
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 # Install project dependencies
-RUN yarn install
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
