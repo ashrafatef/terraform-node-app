@@ -1,13 +1,5 @@
 
-
-data "google_client_config" "default" {}
-data "google_container_cluster" "my_cluster" {
-  name     = "terraform-node-cluster"
-  location = var.region
-}
-
-
-resource "google_container_cluster" "node-cluster" {
+resource "google_container_cluster" "node_cluster" {
   name     = "terraform-node-cluster"
   location = var.region
 
@@ -16,6 +8,8 @@ resource "google_container_cluster" "node-cluster" {
     initial_node_count = 1
   }
 }
+
+
 
 ## Container Registery 
 resource "google_container_registry" "registry" {
