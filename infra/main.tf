@@ -71,7 +71,7 @@ resource "kubernetes_service_v1" "my_service" {
     selector = {
       app = "my-node-app"
     }
-    
+
     port {
       protocol    = "TCP"
       port        = 80
@@ -92,7 +92,7 @@ resource "tls_self_signed_cert" "self_signed_cert" {
   private_key_pem = tls_private_key.self_signed_key.private_key_pem
 
   validity_period_hours = 12
-  allowed_uses = []
+  allowed_uses          = []
 }
 
 resource "kubernetes_secret_v1" "tls_secret" {
