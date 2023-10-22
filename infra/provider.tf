@@ -4,8 +4,3 @@ provider "google" {
   credentials = file("./cred-key.json")
 }
 
-
-#data "google_container_cluster" "node_cluster" {
-#  name     = "terraform-node-cluster"
-#  location = var.region
-#}

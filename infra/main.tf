@@ -1,12 +1,4 @@
-
-
-provider "kubernetes" {
-  host                   = "https://${google_container_cluster.node_cluster.endpoint}"
-  token                  = data.google_client_config.default.access_token
-  cluster_ca_certificate = base64decode(google_container_cluster.node_cluster.master_auth[0].cluster_ca_certificate)
-}
-
-
+data "google_client_config" "default" {}
 resource "google_container_cluster" "node_cluster" {
   name     = "terraform-node-cluster"
   location = var.region
@@ -18,11 +10,19 @@ resource "google_container_cluster" "node_cluster" {
 }
 
 
+provider "kubernetes" {
+  host                   = "https://${google_container_cluster.node_cluster.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(google_container_cluster.node_cluster.master_auth[0].cluster_ca_certificate)
+}
+
+
+
+
 #data "google_container_cluster" "node_cluster" {
 #  name     = "terraform-node-cluster"
 #  location = var.region
 #}
-data "google_client_config" "default" {}
 
 
 ## Container Registery 
@@ -89,34 +89,32 @@ resource "kubernetes_service_v1" "my_service" {
       port        = 80
       target_port = 8080
     }
-
-    type = "LoadBalancer"
   }
 }
 
 
-resource "tls_private_key" "self_signed_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "tls_self_signed_cert" "self_signed_cert" {
-  private_key_pem = tls_private_key.self_signed_key.private_key_pem
-
-  validity_period_hours = 12
-  allowed_uses          = []
-}
-
-resource "kubernetes_secret_v1" "tls_secret" {
-  metadata {
-    name = "my-tls-secret-v1"
-  }
-
-  data = {
-    crt = tls_self_signed_cert.self_signed_cert.cert_pem
-    key = tls_private_key.self_signed_key.private_key_pem
-  }
-}
+#resource "tls_private_key" "self_signed_key" {
+#  algorithm = "RSA"
+#  rsa_bits  = 4096
+#}
+#
+#resource "tls_self_signed_cert" "self_signed_cert" {
+#  private_key_pem = tls_private_key.self_signed_key.private_key_pem
+#
+#  validity_period_hours = 12
+#  allowed_uses          = []
+#}
+#
+#resource "kubernetes_secret_v1" "tls_secret" {
+#  metadata {
+#    name = "my-tls-secret-v1"
+#  }
+#
+#  data = {
+#    crt = tls_self_signed_cert.self_signed_cert.cert_pem
+#    key = tls_private_key.self_signed_key.private_key_pem
+#  }
+#}
 
 
 #resource "kubernetes_ingress_v1" "my_ingress" {
