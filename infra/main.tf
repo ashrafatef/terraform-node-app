@@ -1,8 +1,31 @@
+## Provider 
+provider "google" {
+  project     = var.project_id
+  region      = var.region
+  credentials = file("./cred-key.json")
+}
+
+## Terraform State Bucket 
+resource "google_storage_bucket" "state_bucket" {
+  location = "US"
+  name     = "32911f4f-9232-4138-83c0-74e9d1833f4b"
+}
+
+// Terraform Backend
+#terraform {
+#  backend "gcs" {
+#    bucket = "32911f4f-9232-4138-83c0-74e9d1833f4b"
+#    prefix = "terraform/state"
+#  }
+#}
+
+
+## Init K8s Cluster 
 data "google_client_config" "default" {}
 resource "google_container_cluster" "node_cluster" {
   name     = "terraform-node-cluster"
   location = var.region
-
+  deletion_protection = false
   node_pool {
     name               = "default-pool"
     initial_node_count = 1
@@ -16,16 +39,7 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(google_container_cluster.node_cluster.master_auth[0].cluster_ca_certificate)
 }
 
-
-
-
-#data "google_container_cluster" "node_cluster" {
-#  name     = "terraform-node-cluster"
-#  location = var.region
-#}
-
-
-## Container Registery 
+## Container Registry 
 resource "google_container_registry" "registry" {
   project  = var.project_id
   location = "EU"
@@ -37,7 +51,7 @@ resource "google_storage_bucket_iam_member" "owner" {
   member = "user:ashrafatef.de@gmail.com"
 }
 
-
+## Kubernetes Deployment 
 
 resource "kubernetes_deployment_v1" "my_deployment" {
   metadata {
@@ -72,7 +86,7 @@ resource "kubernetes_deployment_v1" "my_deployment" {
     }
   }
 }
-
+## Kubernetes Service 
 
 resource "kubernetes_service_v1" "my_service" {
   metadata {
