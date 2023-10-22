@@ -1,4 +1,10 @@
 
+
+provider "kubernetes" {
+  host                   = "https://${data.google_container_cluster.node_cluster.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(data.google_container_cluster.node_cluster.master_auth[0].cluster_ca_certificate)
+}
 resource "google_container_cluster" "node_cluster" {
   name     = "terraform-node-cluster"
   location = var.region
@@ -8,7 +14,11 @@ resource "google_container_cluster" "node_cluster" {
     initial_node_count = 1
   }
 }
-
+data "google_container_cluster" "node_cluster" {
+  name     = "terraform-node-cluster"
+  location = var.region
+}
+data "google_client_config" "default" {}
 
 
 ## Container Registery 
