@@ -12,7 +12,7 @@ jobs:
       run:
         shell: bash
         # We keep Terraform files in the terraform directory.
-        working-directory: ../infra
+        working-directory: ./infra
     steps:
       - uses: actions/checkout@v2
         name: "Checkout Repository"
