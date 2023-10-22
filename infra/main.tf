@@ -71,7 +71,7 @@ resource "kubernetes_service_v1" "my_service" {
     selector = {
       app = "my-node-app"
     }
-
+    
     port {
       protocol    = "TCP"
       port        = 80
@@ -94,6 +94,7 @@ resource "tls_self_signed_cert" "self_signed_cert" {
   validity_period_hours = 12
   allowed_uses = []
 }
+
 resource "kubernetes_secret_v1" "tls_secret" {
   metadata {
     name = "my-tls-secret-v1"
@@ -106,32 +107,32 @@ resource "kubernetes_secret_v1" "tls_secret" {
 }
 
 
-resource "kubernetes_ingress_v1" "my_ingress" {
-  metadata {
-    name = "my-node-app-ingress"
-  }
-
-  spec {
-    rule {
-      http {
-        path {
-          backend {
-            service {
-              name = kubernetes_service_v1.my_service.metadata[0].name
-              port {
-                  number = 80
-              }
-            }  
-          }
-        }
-      }
-    }
-
-    tls {
-      secret_name = kubernetes_secret_v1.tls_secret.metadata[0].name
-    }
-  }
-}
+#resource "kubernetes_ingress_v1" "my_ingress" {
+#  metadata {
+#    name = "my-node-app-ingress"
+#  }
+#
+#  spec {
+#    rule {
+#      http {
+#        path {
+#          backend {
+#            service {
+#              name = kubernetes_service_v1.my_service.metadata[0].name
+#              port {
+#                  number = 80
+#              }
+#            }  
+#          }
+#        }
+#      }
+#    }
+#
+#    tls {
+#      secret_name = kubernetes_secret_v1.tls_secret.metadata[0].name
+#    }
+#  }
+#}
 
 
 

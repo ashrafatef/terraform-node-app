@@ -1,3 +1,7 @@
-infra/.terraform/*
+infra/.terraform/
 node_modules
 infra/cred-key.json
+.idea
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
+infra/.terraform.lock.hcl
