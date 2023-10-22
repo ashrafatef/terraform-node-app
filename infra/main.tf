@@ -1,6 +1,10 @@
 
 
-
+data "google_client_config" "default" {}
+data "google_container_cluster" "my_cluster" {
+  name     = "terraform-node-cluster"
+  location = var.region
+}
 
 
 resource "google_container_cluster" "node-cluster" {
