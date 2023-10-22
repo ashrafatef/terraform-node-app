@@ -45,11 +45,11 @@ resource "google_container_registry" "registry" {
   location = "EU"
 }
 
-resource "google_storage_bucket_iam_member" "owner" {
-  bucket = google_container_registry.registry.id
-  role   = "roles/storage.admin"
-  member = "user:ashrafatef.de@gmail.com"
-}
+#resource "google_storage_bucket_iam_member" "owner" {
+#  bucket = google_container_registry.registry.id
+#  role   = "roles/storage.admin"
+#  member = "user:ashrafatef.de@gmail.com"
+#}
 
 ## Kubernetes Deployment 
 
